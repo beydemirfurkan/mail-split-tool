@@ -47,7 +47,6 @@ function ExcelReader() {
   };
 
   return (
-    <main className="bg-gray-100 min-h-screen flex items-center justify-center p-6">
       <div className="bg-white shadow-xl rounded-lg p-8 max-w-lg w-full flex flex-col">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">E-posta Bölme</h2>
           <label className="block mb-2 text-gray-700" htmlFor="from-input">
@@ -78,7 +77,6 @@ function ExcelReader() {
             İşle ve İndir
           </button>
       </div>
-    </main>
   );
 }
 
