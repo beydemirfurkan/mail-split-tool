@@ -9,6 +9,14 @@ const sidebarItems = [
         name: 'E-posta Ayırma',
         path: '/mail-split',
     },
+    {
+        name: 'E-posta Duplicate',
+        path: '/mail-duplicate',
+    },
+    {
+        name: 'E-posta Tekilleştirme',
+        path: '/mail-deduplicate'
+    }
 ];
 
 

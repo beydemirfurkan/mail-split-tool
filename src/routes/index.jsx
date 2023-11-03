@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
+import MainLayout from "../layouts/main-layout";
 import MailMergeTool from "../pages/MailMergeTool";
 import MailSplitTool from "../pages/MailSplitTool";
-import MainLayout from "../layouts/main-layout";
+import MailDuplicateTool from "../pages/MailDuplicateTool";
+import MailDeDuplicationTool from "../pages/MailDeDuplicationTool";
 
 const routes = createBrowserRouter([
     {
@@ -15,6 +17,19 @@ const routes = createBrowserRouter([
             {
                 path: "/mail-split",
                 element: <MailSplitTool />,
+            },
+            {
+                path: "/mail-duplicate",
+                element: <MailDuplicateTool />,
+            },
+            {
+                path: "/mail-deduplicate",
+                element: <MailDeDuplicationTool />
+            },
+
+            {
+                path: "*",
+                element: <h1>404 Not Found</h1>,
             }
         ]
     },
