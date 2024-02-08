@@ -10,20 +10,17 @@ const DataProcessor = () => {
   };
 
   const handleProcessData = async () => {
-    setResultInfo(''); // Önceki sonuçları temizle
+    setResultInfo('');
     if (mainFile && removeFile) {
       try {
-        // Dosyaları okuyup içerikleri al
         const mainContent = await readFile(mainFile);
         const removeContent = await readFile(removeFile);
 
-        // İşleme
         const mainLines = mainContent.split('\n');
         const removeLines = new Set(removeContent.split('\n'));
         const filteredLines = mainLines.filter((line) => !removeLines.has(line));
         const removedCount = mainLines.length - filteredLines.length;
 
-        // Sonuç bilgisini güncelle
         setResultInfo(`Toplam ${mainLines.length} satırdan ${removedCount} tanesi çıkarıldı. İşlenen veri sayısı: ${filteredLines.length}`);
 
         // İndirme işlemi
@@ -67,10 +64,10 @@ const DataProcessor = () => {
         accept=".txt"
         className="mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
       />
-        <label className="block mb-2 text-gray-700" htmlFor="remove-file-input">
+      <label className="block mb-2 text-gray-700" htmlFor="remove-file-input">
         Çıkarılacak veri
       </label>
-        <input
+      <input
         id="remove-file-input"
         type="file"
         onChange={handleFileChange(setRemoveFile)}

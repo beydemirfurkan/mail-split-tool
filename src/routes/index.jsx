@@ -4,6 +4,7 @@ import MailMergeTool from "../pages/MailMergeTool";
 import MailSplitTool from "../pages/MailSplitTool";
 import MailDuplicateTool from "../pages/MailDuplicateTool";
 import MailDeDuplicationTool from "../pages/MailDeDuplicationTool";
+import MailFormattedTool from "../pages/MailFormattedTool";
 
 const routes = createBrowserRouter([
     {
@@ -26,7 +27,10 @@ const routes = createBrowserRouter([
                 path: "/mail-deduplicate",
                 element: <MailDeDuplicationTool />
             },
-
+            {
+                path: "/mail-formatted",
+                element: <MailFormattedTool />,
+            },
             {
                 path: "*",
                 element: <h1>404 Not Found</h1>,
