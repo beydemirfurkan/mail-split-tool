@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import { useState } from 'react';
 
 const MailFormatterTool = () => {
@@ -7,57 +6,46 @@ const MailFormatterTool = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [progressMessage, setProgressMessage] = useState('');
 
-
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
         setProgressMessage('');
     };
 
     const handleProcessAndDownload = () => {
-        if (file) {
-            setIsLoading(true);
-            setProgressMessage('Dosya işleniyor, lütfen bekleyin...');
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const content = e.target.result;
-                const workerScript = `
-                  self.onmessage = (e) => {
-                    const { text } = e.data;
-                    const lines = text.split('\\n');
-                    const validEmails = lines.filter((line) => {
-                      <!-- const regex = /^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(.\\w{2,3})+$/; -->
-                      const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z0-9\u00A1-\uFFFF\-]+\.)+[a-zA-Z]{2,}))$/;
-                      return regex.test(line.trim());
-                    });
-    
-                    // Post the valid emails back to the main thread
-                    self.postMessage({ validEmails });
-                  };
-                `;
-                const blob = new Blob([workerScript], { type: 'application/javascript' });
-                const worker = new Worker(URL.createObjectURL(blob));
-
-                worker.onmessage = (e) => {
-                    const { validEmails } = e.data;
-                    setIsLoading(false);
-                    setProgressMessage('Dosya işleme tamamlandı ve indiriliyor.'); // İşleme tamamlandığında kullanıcıya bilgi ver
-                    createDownloadableFile(validEmails);
-                    generateReport(validEmails, content.split('\n').length);
-                };
-
-                worker.postMessage({ text: content });
-            };
-            reader.readAsText(file);
+        if (!file) {
+            setProgressMessage('Lütfen bir dosya seçin.');
+            return;
         }
+
+        setIsLoading(true);
+        setProgressMessage('Dosya işleniyor, lütfen bekleyin...');
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            const lines = content.split('\n');
+            const validEmails = lines.filter(line => {
+                const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                return regex.test(line);
+            });
+
+            setIsLoading(false);
+            setProgressMessage('Dosya işleme tamamlandı ve indiriliyor.');
+            createDownloadableFile(validEmails);
+            generateReport(validEmails, lines.length);
+        };
+
+        reader.onerror = (error) => {
+            console.error('Dosya okuma hatası:', error);
+            setIsLoading(false);
+            setProgressMessage('Dosya okuma sırasında bir hata oluştu.');
+        };
+
+        reader.readAsText(file);
     };
 
     const generateReport = (validEmails, totalLines) => {
-        const reportText = `
-          Total Emails: ${totalLines}
-          Valid Emails: ${validEmails.length}
-          Invalid Emails: ${totalLines - validEmails.length}
-        `;
+        const reportText = `Total Emails: ${totalLines}\nValid Emails: ${validEmails.length}\nInvalid Emails: ${totalLines - validEmails.length}`;
         setReport(reportText);
     };
 
@@ -92,8 +80,8 @@ const MailFormatterTool = () => {
             >
                 {isLoading ? 'İşleniyor...' : 'İşle ve İndir'}
             </button>
-            {progressMessage && <div>{progressMessage}</div>}
-            <pre>{report}</pre>
+            {progressMessage && <div className="mt-2">{progressMessage}</div>}
+            {report && <pre className="mt-4">{report}</pre>}
         </div>
     );
 };
